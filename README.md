@@ -36,7 +36,7 @@ Tank, Spellcaster, Assassin, Marksman, Warrior. Each one is a subclass of `Chara
 | **Dagaerag** | `tank.py`, `warrior.py` | Finish both classes: tune stats, write a unique `special_attack` |
 | **Estillore** | `spellcaster.py`, `marksman.py` | Finish both classes: tune stats, write a unique `special_attack` |
 | **Fajardo** | `assassin.py`, `test_battle.py` | Finish Assassin, add tests for every class, write the final report/slides for the rubric |
-| **Solis** | `gui.py` | Tkinter or pygame screen: pick a class per player, HP bars, 3 action buttons, battle log, winner, restart |
+| **Solis** | `gui.py` | Tkinter screen (no pygame): pick a class per player, HP bars, 3 action buttons, battle log, winner, restart |
 
 ## Rules for working together
 
