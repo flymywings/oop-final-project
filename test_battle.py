@@ -1,79 +1,54 @@
+import random
 import unittest
 
 from battle import Battle
-from hero import Hero
+from character import Character
+from tank import Tank
+from spellcaster import Spellcaster
+from assassin import Assassin
+from marksman import Marksman
+from warrior import Warrior
 
 
-class MarvelHero(Hero):
-    def use_skill(self, opponent):
-        return self.skill_attack(opponent, "Marvel Blast")
-
-
-class DCHero(Hero):
-    def use_skill(self, opponent):
-        return self.skill_attack(opponent, "DC Strike")
-
-
-class BattleTests(unittest.TestCase):
+class TestCharacters(unittest.TestCase):
     def setUp(self):
-        self.battle = Battle()
-        self.marvel = MarvelHero("Marvel Hero", 25)
-        self.dc = DCHero("DC Hero", 20)
+        random.seed(1)
 
-    def test_hero_is_abstract_and_health_stays_in_bounds(self):
+    def test_character_is_abstract(self):
         with self.assertRaises(TypeError):
-            Hero("Base Hero", 25)
+            Character("x", 1, 1, 1, 1, 1)
 
-        self.assertEqual(self.marvel.heal(), "Marvel Hero heals 0 HP.")
-        self.assertEqual(self.marvel.take_damage(120), 100)
-        self.assertEqual(self.marvel.get_health(), 0)
+    def test_encapsulation_hp_is_read_only(self):
+        tank = Tank()
+        with self.assertRaises(AttributeError):
+            tank.hp = 0
 
-    def test_turns_damage_healing_and_hero_specific_skills(self):
-        self.battle.start(self.marvel, self.dc)
+    def test_every_class_has_three_actions(self):
+        for cls in (Tank, Spellcaster, Assassin, Marksman, Warrior):
+            fighter, enemy = cls(), Warrior()
+            for action in Battle.ACTIONS:
+                self.assertIsInstance(getattr(fighter, action)(enemy), str)
 
-        self.battle.play("attack")
-        self.assertEqual(self.dc.get_health(), 75)
-        self.assertEqual(self.battle.current_turn, 2)
 
-        self.battle.play("heal")
-        self.assertEqual(self.dc.get_health(), 95)
-        self.assertEqual(self.battle.current_turn, 1)
+class TestBattle(unittest.TestCase):
+    def test_battle_reaches_a_winner(self):
+        random.seed(2)
+        battle = Battle()
+        battle.start(Spellcaster(), Tank())
+        for _ in range(500):
+            if battle.current_turn is None:
+                break
+            battle.play("special_attack")
+        self.assertIsNotNone(battle.winner)
+        self.assertIsNone(battle.current_turn)
 
-        self.battle.play("skill")
-        self.assertEqual(self.dc.get_health(), 45)
-        self.assertIn("Marvel Blast", self.battle.log[-1])
-
-        self.battle.play("skill")
-        self.assertEqual(self.marvel.get_health(), 60)
-        self.assertIn("DC Strike", self.battle.log[-1])
-
-    def test_winner_locks_actions_and_restart_clears_the_match(self):
-        self.assertFalse(self.battle.play("attack"))
-        self.battle.start(self.marvel, self.dc)
-        self.assertFalse(self.battle.play("invalid"))
-        self.assertEqual(self.battle.current_turn, 1)
-
-        self.battle.play("skill")
-        self.battle.play("attack")
-        self.battle.play("skill")
-
-        self.assertIs(self.battle.winner, self.marvel)
-        self.assertEqual(self.dc.get_health(), 0)
-        self.assertIsNone(self.battle.current_turn)
-        self.assertFalse(self.battle.play("heal"))
-        self.assertEqual(self.battle.log[-1], "Marvel Hero wins!")
-
-        self.battle.restart()
-        self.assertIsNone(self.battle.winner)
-        self.assertIsNone(self.battle.marvel_hero)
-        self.assertIsNone(self.battle.dc_hero)
-        self.assertEqual(self.battle.log, [])
-        self.assertFalse(self.battle.play("attack"))
-
-        rematch_hero = DCHero("Another DC Hero", 20)
-        self.battle.start(MarvelHero("Marvel Hero", 25), rematch_hero)
-        self.assertEqual(rematch_hero.get_health(), 100)
-        self.assertEqual(self.battle.current_turn, 1)
+    def test_restart_clears_everything(self):
+        battle = Battle()
+        battle.start(Tank(), Warrior())
+        battle.play("attack")
+        battle.restart()
+        self.assertEqual(battle.log, [])
+        self.assertIsNone(battle.winner)
 
 
 if __name__ == "__main__":
