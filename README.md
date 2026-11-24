@@ -32,11 +32,15 @@ Tank, Spellcaster, Assassin, Marksman, Warrior. Each one is a subclass of `Chara
 
 | Member | Files | Job |
 |---|---|---|
-| **Collado** | `character.py`, `battle.py`, `main.py` | Base class, battle rules, merging everyone's branches, final run-through |
-| **Dagaerag** | `tank.py`, `warrior.py` | Finish both classes: tune stats, write a unique `special_attack` |
-| **Estillore** | `spellcaster.py`, `marksman.py` | Finish both classes: tune stats, write a unique `special_attack` |
-| **Fajardo** | `assassin.py`, `test_battle.py` | Finish Assassin, add tests for every class, write the final report/slides for the rubric |
-| **Solis** | `gui.py` | Tkinter screen (no pygame): pick a class per player, HP bars, 3 action buttons, battle log, winner, restart |
+| **Collado** | `character.py`, `battle.py`, `main.py`, `gui.py`, `tank.py` | Base class and battle rules (done), main window, Tank, merging, final run-through |
+| **Dagaerag** | `spellcaster.py`, `gui_select.py` | Spellcaster + the class selection screen |
+| **Estillore** | `assassin.py`, `gui_battle.py` | Assassin + the battle screen (HP, turn, 3 buttons, log, winner, restart) |
+| **Fajardo** | `marksman.py`, `test_battle.py` | Marksman + tests for every class |
+| **Solis** | `warrior.py`, `REPORT.md` | Warrior + the rubric report and slides |
+
+**Everyone: open your own file in `tasks/` (for example `tasks/DAGAERAG.md`). It has your checklist, exact code contract, and git steps.**
+
+The GUI is Tkinter only (no pygame).
 
 ## Rules for working together
 
